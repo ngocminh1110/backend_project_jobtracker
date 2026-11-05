@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add Application</title>
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+</head>
+
+<body>
+
+    <div class="container mt-4">
+
+        <h1>Add Job Application</h1>
+
+        <form th:object="${application}" th:action="@{/saveapplication}" method="post">
+
+            <div class="mb-3">
+                <label class="form-label">Company</label>
+                <input type="text" th:field="*{company}" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Position</label>
+                <input type="text" th:field="*{position}" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Location</label>
+                <input type="text" th:field="*{location}" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Job Link</label>
+                <input type="url" th:field="*{jobUrl}" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Applied Date</label>
+                <input type="date" th:field="*{appliedDate}" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Status</label>
+                <select th:field="*{status}" class="form-select">
+                    <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+                </select>
+            </div>
+
+            <input type="submit" value="Save" class="btn btn-success">
+            <a th:href="@{/applicationlist}" class="btn btn-secondary">Cancel</a>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>

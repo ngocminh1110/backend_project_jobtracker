@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Job Tracker</title>
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+</head>
+
+<body>
+
+    <div class="container mt-4">
+
+        <h1>My Job Applications</h1>
+
+        <a th:href="@{/addapplication}" class="btn btn-success mb-3">Add Application</a>
+
+        <table class="table table-striped">
+
+            <thead>
+                <tr>
+                    <th>Company</th>
+                    <th>Position</th>
+                    <th>Location</th>
+                    <th>Applied Date</th>
+                    <th>Status</th>
+                    <th>Job Link</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr th:each="job : ${applications}">
+
+                    <td th:text="${job.company}"></td>
+                    <td th:text="${job.position}"></td>
+                    <td th:text="${job.location}"></td>
+
+                    <td th:text="${job.appliedDate != null ? #temporals.format(job.appliedDate, 'dd.MM.yyyy') : '-'}">
+                    </td>
+
+                    <td th:text="${job.status}"></td>
+
+                    <td>
+                        <a th:if="${job.jobUrl != null}" th:href="${job.jobUrl}" target="_blank">Open</a>
+                    </td>
+
+                    <td class="text-nowrap">
+                        <a th:href="@{/edit/{id}(id=${job.id})}" class="btn btn-sm btn-primary">Edit</a>
+                        <a th:href="@{/delete/{id}(id=${job.id})}" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+</body>
+
+</html>
