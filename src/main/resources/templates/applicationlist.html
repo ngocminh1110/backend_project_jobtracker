@@ -11,11 +11,17 @@
 
     <div class="container mt-4">
 
-        <h1>My Job Applications</h1>
+        <h2 class="mb-4">My Job Applications</h2>
 
-        <a th:href="@{/addapplication}" class="btn btn-success mb-3">Add Application</a>
+        <div class="d-flex justify-content-between mb-3">
+            <a th:href="@{/addapplication}" class="btn btn-success">Add Application</a>
 
-        <table class="table table-striped">
+            <form th:action="@{/logout}" method="post" class="m-0">
+                <input type="submit" value="Sign Out" class="btn btn-secondary">
+            </form>
+        </div>
+
+        <table class="table table-striped align-middle">
 
             <thead>
                 <tr>
@@ -42,7 +48,7 @@
                     <td th:text="${job.status}"></td>
 
                     <td>
-                        <a th:if="${job.jobUrl != null}" th:href="${job.jobUrl}" target="_blank">Open</a>
+                        <a th:if="${!#strings.isEmpty(job.jobUrl)}" th:href="${job.jobUrl}" target="_blank">Open</a>
                     </td>
 
                     <td class="text-nowrap">

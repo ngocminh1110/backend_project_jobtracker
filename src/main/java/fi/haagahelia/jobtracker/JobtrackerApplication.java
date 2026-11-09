@@ -10,6 +10,9 @@ import org.springframework.context.annotation.Bean;
 import fi.haagahelia.jobtracker.domain.ApplicationStatus;
 import fi.haagahelia.jobtracker.domain.JobApplication;
 import fi.haagahelia.jobtracker.domain.JobApplicationRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import fi.haagahelia.jobtracker.domain.AppUser;
+import fi.haagahelia.jobtracker.domain.AppUserRepository;
 
 @SpringBootApplication
 public class JobtrackerApplication {
@@ -20,8 +23,13 @@ public class JobtrackerApplication {
 
 	// Add some demo data when the app starts
 	@Bean
-	public CommandLineRunner initializeDatabase(JobApplicationRepository applicationRepository) {
+	public CommandLineRunner initializeDatabase(JobApplicationRepository applicationRepository,
+			AppUserRepository userRepository) {
 		return (args) -> {
+			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+			AppUser owner = new AppUser("admin", passwordEncoder.encode("admin"), "ADMIN");
+			userRepository.save(owner);
+			System.out.println(owner);
 			applicationRepository.save(new JobApplication(
 					"Finnair", "Take off- Finnair Trainee Program", "Vantaa, Uusimaa, Finland",
 					"https://www.linkedin.com/jobs/view/4486118762/?alternateChannel=search&eBP=NON_CHARGEABLE_CHANNEL&refId=lUngqPtJZLGGOG7mPojtCQ%3D%3D&trackingId=WBRxGeb7GUYWETcWiWtp%2FA%3D%3D",

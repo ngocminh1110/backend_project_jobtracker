@@ -10,6 +10,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 
 // One job that the user wants to apply or has applied to
 @Entity
@@ -19,8 +20,12 @@ public class JobApplication {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotBlank(message = "Company is required")
     private String company;
+
+    @NotBlank(message = "Position is required")
     private String position;
+
     private String location;
     private String jobUrl;
 

@@ -19,12 +19,16 @@
 
             <div class="mb-3">
                 <label class="form-label">Company</label>
-                <input type="text" th:field="*{company}" class="form-control">
+                <input type="text" th:field="*{company}" class="form-control"
+                    th:classappend="${#fields.hasErrors('company')} ? 'is-invalid'">
+                <div class="invalid-feedback" th:errors="*{company}"></div>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Position</label>
-                <input type="text" th:field="*{position}" class="form-control">
+                <input type="text" th:field="*{position}" class="form-control"
+                    th:classappend="${#fields.hasErrors('position')} ? 'is-invalid'">
+                <div class="invalid-feedback" th:errors="*{position}"></div>
             </div>
 
             <div class="mb-3">

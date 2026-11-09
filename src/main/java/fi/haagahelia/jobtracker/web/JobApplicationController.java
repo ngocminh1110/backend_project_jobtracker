@@ -3,19 +3,23 @@ package fi.haagahelia.jobtracker.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import fi.haagahelia.jobtracker.domain.ApplicationStatus;
 import fi.haagahelia.jobtracker.domain.JobApplication;
 import fi.haagahelia.jobtracker.domain.JobApplicationRepository;
+import org.springframework.validation.BindingResult;
+
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 @Controller
 public class JobApplicationController {
 
     private final JobApplicationRepository applicationRepository;
 
-    // Constructor injection
     public JobApplicationController(JobApplicationRepository applicationRepository) {
         this.applicationRepository = applicationRepository;
     }
@@ -39,7 +43,17 @@ public class JobApplicationController {
     }
 
     @PostMapping("/saveapplication")
-    public String saveApplication(JobApplication application) {
+    public String saveApplication(@Valid @ModelAttribute("application") JobApplication application,
+            BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("statuses", ApplicationStatus.values());
+            if (application.getId() == null) {
+                return "addapplication";
+            }
+            return "editapplication";
+        }
+
         applicationRepository.save(application);
         return "redirect:/applicationlist";
     }
