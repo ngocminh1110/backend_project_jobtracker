@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Job Tracker</title>
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+</head>
+
+<body>
+
+    <div class="container mt-5" style="max-width: 400px;">
+
+        <h2 class="mb-4 text-center">Job Tracker</h2>
+
+        <!-- Messages from Spring Security and from sign up -->
+        <div th:if="${param.error}" class="alert alert-danger">Wrong username or password</div>
+        <div th:if="${param.logout}" class="alert alert-info">You have been signed out</div>
+        <div th:if="${param.registered}" class="alert alert-success">Account created. Please log in.</div>
+
+        <!-- Spring Security reads "username" and "password" from this form -->
+        <form th:action="@{/login}" method="post">
+
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" autofocus>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control">
+            </div>
+
+            <input type="submit" value="Log In" class="btn btn-primary w-100">
+
+        </form>
+
+        <p class="text-center mt-3">
+            No account yet? <a th:href="@{/signup}">Create one</a>
+        </p>
+
+    </div>
+
+</body>
+
+</html>

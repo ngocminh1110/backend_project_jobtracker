@@ -1,10 +1,14 @@
 package fi.haagahelia.jobtracker.domain;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class AppUser {
@@ -23,6 +27,10 @@ public class AppUser {
 
     @Column(name = "role", nullable = false)
     private String role;
+
+    // EACH USER HAS OWN JOBS
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "appUser")
+    private List<JobApplication> jobs;
 
     public AppUser() {
     }
@@ -63,6 +71,14 @@ public class AppUser {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public List<JobApplication> getJobs() {
+        return jobs;
+    }
+
+    public void setJobs(List<JobApplication> jobs) {
+        this.jobs = jobs;
     }
 
     @Override

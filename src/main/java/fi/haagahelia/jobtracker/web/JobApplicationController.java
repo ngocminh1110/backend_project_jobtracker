@@ -1,27 +1,34 @@
 package fi.haagahelia.jobtracker.web;
 
+import java.util.List;
+
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import fi.haagahelia.jobtracker.domain.AppUser;
+import fi.haagahelia.jobtracker.domain.AppUserRepository;
 import fi.haagahelia.jobtracker.domain.ApplicationStatus;
 import fi.haagahelia.jobtracker.domain.JobApplication;
 import fi.haagahelia.jobtracker.domain.JobApplicationRepository;
-import org.springframework.validation.BindingResult;
-
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 @Controller
 public class JobApplicationController {
 
     private final JobApplicationRepository applicationRepository;
+    private final AppUserRepository appUserRepository;
 
-    public JobApplicationController(JobApplicationRepository applicationRepository) {
+    public JobApplicationController(JobApplicationRepository applicationRepository,
+            AppUserRepository appUserRepository) {
         this.applicationRepository = applicationRepository;
+        this.appUserRepository = appUserRepository;
     }
 
     @GetMapping("/")
@@ -31,7 +38,14 @@ public class JobApplicationController {
 
     @GetMapping("/applicationlist")
     public String applicationList(Model model) {
-        model.addAttribute("applications", applicationRepository.findAll());
+        // FINDS AS WHOM LOGGED INTO NOW
+        UserDetails appUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        // WHEN IT IS FOUND OUT CAN FIND JOBS OF THAT PERSON
+        String username = appUser.getUsername();
+        AppUser userNow = appUserRepository.findByUsername(username);
+        List<JobApplication> jobApplications = applicationRepository.findByAppUser(userNow);
+
+        model.addAttribute("applications", jobApplications);
         return "applicationlist";
     }
 
@@ -53,6 +67,11 @@ public class JobApplicationController {
             }
             return "editapplication";
         }
+
+        // THE FORM DOES NOT SEND THE USER, SO WE SET THE LOGGED IN USER HERE
+        UserDetails appUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AppUser userNow = appUserRepository.findByUsername(appUser.getUsername());
+        application.setAppUser(userNow);
 
         applicationRepository.save(application);
         return "redirect:/applicationlist";

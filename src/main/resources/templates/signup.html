@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
+</head>
+
+<body>
+
+    <div class="container mt-4" style="max-width: 500px;">
+
+        <h2 class="mb-4">Sign Up</h2>
+
+        <form th:object="${signupform}" th:action="@{/saveuser}" method="post">
+
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" th:field="*{username}" class="form-control"
+                    th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'">
+                <div class="invalid-feedback" th:errors="*{username}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" th:field="*{password}" class="form-control"
+                    th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'">
+                <div class="invalid-feedback" th:errors="*{password}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Repeat Password</label>
+                <input type="password" th:field="*{passwordCheck}" class="form-control"
+                    th:classappend="${#fields.hasErrors('passwordCheck')} ? 'is-invalid'">
+                <div class="invalid-feedback" th:errors="*{passwordCheck}"></div>
+            </div>
+
+            <input type="submit" value="Sign Up" class="btn btn-success">
+            <a th:href="@{/login}" class="btn btn-secondary">Back to Login</a>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>

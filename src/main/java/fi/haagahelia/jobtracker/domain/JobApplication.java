@@ -10,7 +10,10 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 // One job that the user wants to apply or has applied to
 @Entity
@@ -18,7 +21,7 @@ public class JobApplication {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long jobApplicationId;
 
     @NotBlank(message = "Company is required")
     private String company;
@@ -27,6 +30,7 @@ public class JobApplication {
     private String position;
 
     private String location;
+    @Size(min = 0, max = 2000)
     private String jobUrl;
 
     // We can read the date from the HTML form in the format yyyy-MM-dd
@@ -36,6 +40,10 @@ public class JobApplication {
     // We can save the status as text (e.g. "APPLIED") in the database
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
+
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private AppUser appUser;
 
     public JobApplication() {
     }
@@ -51,11 +59,11 @@ public class JobApplication {
     }
 
     public Long getId() {
-        return id;
+        return jobApplicationId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long jobApplicationId) {
+        this.jobApplicationId = jobApplicationId;
     }
 
     public String getCompany() {
@@ -106,10 +114,26 @@ public class JobApplication {
         this.status = status;
     }
 
+    public Long getJobApplicationId() {
+        return jobApplicationId;
+    }
+
+    public void setJobApplicationId(Long jobApplicationId) {
+        this.jobApplicationId = jobApplicationId;
+    }
+
+    public AppUser getAppUser() {
+        return appUser;
+    }
+
+    public void setAppUser(AppUser appUser) {
+        this.appUser = appUser;
+    }
+
     @Override
     public String toString() {
         return "JobApplication{" +
-                "id=" + id +
+                "id=" + jobApplicationId +
                 ", company='" + company + '\'' +
                 ", position='" + position + '\'' +
                 ", status=" + status +

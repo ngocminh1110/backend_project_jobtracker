@@ -10,4 +10,6 @@ public interface JobApplicationRepository extends CrudRepository<JobApplication,
     List<JobApplication> findByStatus(ApplicationStatus status);
 
     List<JobApplication> findByCompany(String company);
+
+    List<JobApplication> findByAppUser(AppUser appUser);
 }

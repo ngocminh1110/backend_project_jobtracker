@@ -16,9 +16,12 @@ public class WebSecurityConfig {
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/css/**").permitAll()
+                        // CSS and the sign up pages are open to everyone
+                        .requestMatchers("/css/**", "/signup", "/saveuser").permitAll()
+                        // All other pages need login
                         .anyRequest().authenticated())
                 .formLogin(formlogin -> formlogin
+                        .loginPage("/login")
                         .defaultSuccessUrl("/applicationlist", true)
                         .permitAll())
                 .logout(logout -> logout
