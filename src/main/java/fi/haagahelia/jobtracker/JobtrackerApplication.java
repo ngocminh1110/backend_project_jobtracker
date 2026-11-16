@@ -26,6 +26,10 @@ public class JobtrackerApplication {
 	public CommandLineRunner initializeDatabase(JobApplicationRepository applicationRepository,
 			AppUserRepository userRepository) {
 		return (args) -> {
+			// Data stays in MySQL now, so add demo data only on the first start
+			if (userRepository.count() > 0) {
+				return;
+			}
 			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 			// First user: admin
