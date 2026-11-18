@@ -13,10 +13,13 @@
 
         <h1>Edit Job Application</h1>
 
+        <!-- SAME SAVE URL AS THE ADD FORM, th:action ALSO ADDS THE CSRF TOKEN -->
         <form th:object="${application}" th:action="@{/saveapplication}" method="post">
 
+            <!-- HIDDEN ID: SAVE UPDATES THIS JOB, NOT CREATES A NEW ONE -->
             <input type="hidden" th:field="*{id}">
 
+            <!-- REQUIRED: RED BORDER AND MESSAGE IF EMPTY -->
             <div class="mb-3">
                 <label class="form-label">Company</label>
                 <input type="text" th:field="*{company}" class="form-control"
@@ -24,6 +27,7 @@
                 <div class="invalid-feedback" th:errors="*{company}"></div>
             </div>
 
+            <!-- REQUIRED: RED BORDER AND MESSAGE IF EMPTY -->
             <div class="mb-3">
                 <label class="form-label">Position</label>
                 <input type="text" th:field="*{position}" class="form-control"
@@ -36,16 +40,19 @@
                 <input type="text" th:field="*{location}" class="form-control">
             </div>
 
+            <!-- type="url" MAKES THE BROWSER CHECK THAT IT LOOKS LIKE A LINK -->
             <div class="mb-3">
                 <label class="form-label">Job Link</label>
                 <input type="url" th:field="*{jobUrl}" class="form-control">
             </div>
 
+            <!-- SHOWS THE SAVED DATE, BROWSER SENDS IT BACK AS yyyy-MM-dd -->
             <div class="mb-3">
                 <label class="form-label">Applied Date</label>
                 <input type="date" th:field="*{appliedDate}" class="form-control">
             </div>
 
+            <!-- DROPDOWN WITH ALL STATUSES, THE SAVED ONE IS SELECTED -->
             <div class="mb-3">
                 <label class="form-label">Status</label>
                 <select th:field="*{status}" class="form-select">

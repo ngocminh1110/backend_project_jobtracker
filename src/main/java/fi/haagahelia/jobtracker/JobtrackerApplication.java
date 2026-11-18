@@ -21,22 +21,25 @@ public class JobtrackerApplication {
 		SpringApplication.run(JobtrackerApplication.class, args);
 	}
 
-	// Add some demo data when the app starts
+	// ADDS DEMO USERS AND JOBS WHEN THE APP STARTS
 	@Bean
 	public CommandLineRunner initializeDatabase(JobApplicationRepository applicationRepository,
 			AppUserRepository userRepository) {
 		return (args) -> {
-			// Data stays in MySQL now, so add demo data only on the first start
+			// DATA STAYS IN MYSQL, SO DEMO DATA IS ADDED ONLY ON THE FIRST START
 			if (userRepository.count() > 0) {
 				return;
 			}
+
+			// PASSWORDS ARE SAVED ONLY AS BCRYPT HASH, NEVER AS PLAIN TEXT
 			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-			// First user: admin
+			// FIRST USER: ADMIN
 			AppUser owner = new AppUser("admin", passwordEncoder.encode("admin"), "ADMIN");
 			userRepository.save(owner);
 			System.out.println(owner);
 
+			// JOBS OF ADMIN
 			JobApplication jobApp1 = new JobApplication(
 					"Finnair", "Take off- Finnair Trainee Program", "Vantaa, Uusimaa, Finland",
 					"https://www.linkedin.com/jobs/view/4486118762/",
@@ -44,34 +47,35 @@ public class JobtrackerApplication {
 			jobApp1.setAppUser(owner);
 			applicationRepository.save(jobApp1);
 
-			JobApplication jobApp3 = new JobApplication(
+			JobApplication jobApp2 = new JobApplication(
 					"Konecranes", "Trainee, Business Analyst", "Hyvinkää",
 					"https://www.linkedin.com/jobs/view/4484367316/",
 					LocalDate.of(2026, 11, 5), ApplicationStatus.APPLIED);
-			jobApp3.setAppUser(owner);
-			applicationRepository.save(jobApp3);
+			jobApp2.setAppUser(owner);
+			applicationRepository.save(jobApp2);
 
-			JobApplication jobApp4 = new JobApplication(
+			// NO APPLIED DATE YET, BECAUSE IT IS ONLY ON THE WISHLIST
+			JobApplication jobApp3 = new JobApplication(
 					"Wolt", "Software Engineer", "Finland",
 					"https://careers.wolt.com/en/jobs/1/8159098",
 					null, ApplicationStatus.WISHLIST);
-			jobApp4.setAppUser(owner);
-			applicationRepository.save(jobApp4);
+			jobApp3.setAppUser(owner);
+			applicationRepository.save(jobApp3);
 
-			// This is the second user: demo, to test that each user sees only own
-			// applications
+			// SECOND USER: DEMO, TO TEST THAT EACH USER SEES ONLY OWN JOBS
 			AppUser demo = new AppUser("demo", passwordEncoder.encode("demo"), "USER");
 			userRepository.save(demo);
 			System.out.println(demo);
 
-			JobApplication jobApp5 = new JobApplication(
-					"HOK-Elanto", "Junior Analyst ", "Helsinki",
-					"https://www.linkedin.com/jobs/view/4485314188/?alternateChannel=search&eBP=CwEAAAGh0apSXIFbZ0DA-mXxy7AERFAwLBWDkex1AAqLaCnwoPpMg7G3nQpKOhb74KQXbkI7xV74wUnofv3Nvu3RNuNTTkxdqP5r8PiCr0N68RUW3z8QoW0gXRS8srLvUdEoPfjtQLchTwjCmRo3kzPwdHtltWYhs6jVUNvdtSR97z7fcC2LSU5QcTiRbR-sBtNAWHBrYiSP6S5x2epPqxsFfmdeBdvb9hT-Xvkr-RP41eq7PzqUzM1hcL7VSS4sAHtvJ8bYyIrIzARLlc0NJ1Nqiv2NWkEv0hijeLSgUapqBw7gv_me6HItvgRjZWhKN1-crEinHpKl0f3S3VP_t87PM5QXMzqg3bBurgjJtKMu-dPWupHcfebfL2SYxrCoPvQ2dsNIW2ZNxdc-PPkQBK3VDQ9DbxrgbsHIprdraMtTueEJBh30j4eKnOV0-zFEqmdQ1VIoafavBKhmiy3cwhIcXnNqcTgHpHr4xMR87mVetg24K63tFRc2G9zYsyKBs36QNA&refId=WMQBAZAUiDIWxrIgotOW5A%3D%3D&trackingId=DtIujyJsrj5Fx4tH7SNyZQ%3D%3D",
+			// JOB OF DEMO
+			JobApplication jobApp4 = new JobApplication(
+					"HOK-Elanto", "Junior Analyst", "Helsinki",
+					"https://www.linkedin.com/jobs/view/4485314188/",
 					LocalDate.of(2026, 11, 1), ApplicationStatus.INTERVIEW);
-			jobApp5.setAppUser(demo);
-			applicationRepository.save(jobApp5);
+			jobApp4.setAppUser(demo);
+			applicationRepository.save(jobApp4);
 
-			// Print all applications to the terminal to check that saving works
+			// PRINTS ALL JOBS TO THE TERMINAL TO CHECK THAT SAVING WORKS
 			for (JobApplication application : applicationRepository.findAll()) {
 				System.out.println(application);
 			}

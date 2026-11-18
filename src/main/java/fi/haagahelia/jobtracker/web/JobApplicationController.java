@@ -19,23 +19,27 @@ import fi.haagahelia.jobtracker.domain.JobApplication;
 import fi.haagahelia.jobtracker.domain.JobApplicationRepository;
 import jakarta.validation.Valid;
 
+// HANDLES THE PAGES FOR JOB APPLICATIONS: LIST, ADD, EDIT, DELETE
 @Controller
 public class JobApplicationController {
 
     private final JobApplicationRepository applicationRepository;
     private final AppUserRepository appUserRepository;
 
+    // CONSTRUCTOR INJECTION: SPRING GIVES US BOTH REPOSITORIES
     public JobApplicationController(JobApplicationRepository applicationRepository,
             AppUserRepository appUserRepository) {
         this.applicationRepository = applicationRepository;
         this.appUserRepository = appUserRepository;
     }
 
+    // HOME PAGE GOES STRAIGHT TO THE JOB LIST
     @GetMapping("/")
     public String home() {
         return "redirect:/applicationlist";
     }
 
+    // SHOWS ONLY THE JOBS OF THE LOGGED IN USER
     @GetMapping("/applicationlist")
     public String applicationList(Model model) {
         // FINDS AS WHOM LOGGED INTO NOW
@@ -49,19 +53,24 @@ public class JobApplicationController {
         return "applicationlist";
     }
 
+    // SHOWS AN EMPTY FORM FOR A NEW JOB
     @GetMapping("/addapplication")
     public String addApplication(Model model) {
         model.addAttribute("application", new JobApplication());
+        // ALL ENUM VALUES FOR THE STATUS DROPDOWN
         model.addAttribute("statuses", ApplicationStatus.values());
         return "addapplication";
     }
 
+    // SAVES A NEW JOB OR AN EDITED JOB (BOTH FORMS USE THIS)
     @PostMapping("/saveapplication")
     public String saveApplication(@Valid @ModelAttribute("application") JobApplication application,
             BindingResult bindingResult, Model model) {
 
+        // FORM HAS ERRORS: SHOW THE SAME FORM AGAIN WITH RED MESSAGES
         if (bindingResult.hasErrors()) {
             model.addAttribute("statuses", ApplicationStatus.values());
+            // NO ID = NEW JOB, SO BACK TO ADD FORM. OTHERWISE BACK TO EDIT FORM
             if (application.getId() == null) {
                 return "addapplication";
             }
@@ -73,16 +82,19 @@ public class JobApplicationController {
         AppUser userNow = appUserRepository.findByUsername(appUser.getUsername());
         application.setAppUser(userNow);
 
+        // save() ADDS A NEW ROW IF ID IS EMPTY, OR UPDATES THE OLD ROW IF ID EXISTS
         applicationRepository.save(application);
         return "redirect:/applicationlist";
     }
 
+    // DELETES ONE JOB BY ID
     @GetMapping("/delete/{id}")
     public String deleteApplication(@PathVariable("id") Long applicationId) {
         applicationRepository.deleteById(applicationId);
         return "redirect:/applicationlist";
     }
 
+    // SHOWS THE FORM WITH THE OLD DATA OF ONE JOB
     @GetMapping("/edit/{id}")
     public String editApplication(@PathVariable("id") Long applicationId, Model model) {
         JobApplication application = applicationRepository.findById(applicationId).orElse(null);

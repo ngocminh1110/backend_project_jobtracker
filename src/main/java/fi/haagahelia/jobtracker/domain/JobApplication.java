@@ -15,7 +15,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-// One job that the user wants to apply or has applied to
+// ONE JOB THAT THE USER WANTS TO APPLY OR HAS APPLIED TO
 @Entity
 public class JobApplication {
 
@@ -23,6 +23,7 @@ public class JobApplication {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long jobApplicationId;
 
+    // COMPANY AND POSITION ARE REQUIRED, FORM SHOWS RED ERROR IF EMPTY
     @NotBlank(message = "Company is required")
     private String company;
 
@@ -30,17 +31,20 @@ public class JobApplication {
     private String position;
 
     private String location;
+
+    // LINKEDIN LINKS ARE LONG, SO WE ALLOW UP TO 2000 CHARACTERS (DEFAULT IS 255)
     @Size(min = 0, max = 2000)
     private String jobUrl;
 
-    // We can read the date from the HTML form in the format yyyy-MM-dd
+    // HTML DATE INPUT SENDS DATE AS yyyy-MM-dd, THIS TURNS IT INTO LocalDate
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate appliedDate;
 
-    // We can save the status as text (e.g. "APPLIED") in the database
+    // STATUS IS SAVED AS TEXT ("APPLIED"), NOT AS NUMBER (0, 1, 2...)
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
 
+    // MANY JOBS BELONG TO ONE USER
     @ManyToOne
     @JoinColumn(name = "id")
     private AppUser appUser;
@@ -48,6 +52,7 @@ public class JobApplication {
     public JobApplication() {
     }
 
+    // USER IS SET LATER WITH setAppUser()
     public JobApplication(String company, String position, String location,
             String jobUrl, LocalDate appliedDate, ApplicationStatus status) {
         this.company = company;
@@ -58,6 +63,7 @@ public class JobApplication {
         this.status = status;
     }
 
+    // getId() AND setId() ARE USED BY THE HTML PAGES (job.id AND HIDDEN id FIELD)
     public Long getId() {
         return jobApplicationId;
     }
@@ -130,6 +136,7 @@ public class JobApplication {
         this.appUser = appUser;
     }
 
+    // DOES NOT PRINT appUser, SO IT DOES NOT GO IN A LOOP WITH AppUser
     @Override
     public String toString() {
         return "JobApplication{" +
